@@ -1,4 +1,4 @@
-interface ICell {
+export interface ICell {
     flag: boolean;
     visible: boolean;
     value: number;
