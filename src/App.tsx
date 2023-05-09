@@ -1,7 +1,10 @@
 import React from 'react';
+import { makeCells } from './app/lib/func/funcs';
 
 function App() {
-    return <div>minesweeper</div>;
+    const cells = makeCells();
+    console.log(cells);
+    return <div></div>;
 }
 
 export default App;

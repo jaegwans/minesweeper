@@ -1,7 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
+import mineSweeperSlice from './minesweeper/minesweeperSlice';
 
 export const store = configureStore({
-    reducer: {},
+    reducer: mineSweeperSlice,
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

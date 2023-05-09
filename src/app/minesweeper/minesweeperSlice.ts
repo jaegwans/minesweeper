@@ -9,7 +9,7 @@ const initialState: CounterState = {
     value: 0,
 };
 
-export const counterSlice = createSlice({
+export const minesweeperSlice = createSlice({
     name: 'counter',
     initialState,
     reducers: {
@@ -24,6 +24,6 @@ export const counterSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { increment } = counterSlice.actions;
+export const { increment } = minesweeperSlice.actions;
 
-export default counterSlice.reducer;
+export default minesweeperSlice.reducer;
