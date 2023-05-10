@@ -42,7 +42,6 @@ function addMine(cells: ICell[][], y: number, x: number, mine: number) {
                         if (i < 0 || j < 0 || i > y - 1 || j > x - 1) {
                             continue;
                         }
-                        console.log(i, j);
 
                         if (cellsCopy[i][j].value < 9) {
                             cellsCopy[i][j].value++;
@@ -67,8 +66,18 @@ function makeCells(y: number, x: number, mine: number) {
 
     cells = addMine(cells, y, x, mine);
     console.log(cells);
+    return cells;
+}
+function makeEmptyCells(y: number, x: number) {
+    let id = 0;
+    //셀 생성
+    let cells = [...Array(y)].map(() => {
+        return [...Array(x)].map(() => {
+            return { id: id++, flag: false, visible: false, value: 0 };
+        });
+    });
 
     return cells;
 }
 
-export { makeCells };
+export { makeCells, makeEmptyCells };
