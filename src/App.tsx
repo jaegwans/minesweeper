@@ -6,6 +6,7 @@ import { RootState } from './app/store';
 import {
     newCells,
     handleClickUpdateCell,
+    handelClickZeroCell,
 } from './app/minesweeper/minesweeperSlice';
 // export interface ICell {
 //     flag: boolean;
@@ -17,6 +18,19 @@ function App() {
     const dispatch = useDispatch();
     const topState = useSelector((state: RootState) => state);
     console.log(topState, 'topCellsfirst');
+    let mineCount = 8;
+
+    useEffect(() => {
+        let blindCount = 0;
+        topState.cells.map((y: any[]) =>
+            y.map((x) => (x.visible ? ++blindCount : null))
+        );
+        console.log(blindCount, 'blindCount');
+        if (blindCount === mineCount) {
+            alert('승리하셨습니다.');
+            dispatch(newCells({ y: 8, x: 8, m: 10 }));
+        }
+    }, [topState]);
 
     // const [cells, setcells] = useState<ICell[][]>(makeCells(8, 8, 10));
 
@@ -24,23 +38,16 @@ function App() {
 
     function _onClickBlind(cell: ICell) {
         if (cell.value === 0) {
+            dispatch(handelClickZeroCell(cell));
+            //빈칸일때
         } else if (cell.value === 9) {
+            //지뢰일때
             alert('지뢰를 밟았습니다.');
             dispatch(newCells({ y: 8, x: 8, m: 10 }));
         } else {
             //숫자일때
             dispatch(handleClickUpdateCell(cell));
         }
-        // setcells(
-        //     cells.map((y) =>
-        //         y.map((x) => {
-        //             if (x.id === id) {
-        //                 return { ...x, visible: true };
-        //             }
-        //             return x;
-        //         })
-        //     )
-        // );
     }
 
     function firstSet() {
