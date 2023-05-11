@@ -3,7 +3,10 @@ import { makeCells, makeEmptyCells, ICell } from './app/lib/func/funcs';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './app/store';
-import { newCells } from './app/minesweeper/minesweeperSlice';
+import {
+    newCells,
+    handleClickUpdateCell,
+} from './app/minesweeper/minesweeperSlice';
 // export interface ICell {
 //     flag: boolean;
 //     visible: boolean;
@@ -14,28 +17,27 @@ function App() {
     const dispatch = useDispatch();
     const topState = useSelector((state: RootState) => state);
     console.log(topState, 'topCellsfirst');
-    const [first, setFirst] = useState(true);
-    const [cells, setcells] = useState<ICell[][]>(makeCells(8, 8, 10));
-    const [makeCellsParams, setMakeCellsParams] = useState([8, 8, 10]);
-    const [firstSetValue, setFirstSetValue] = useState<ICell>();
 
-    let firstCell: ICell | undefined; //처음 눌러진 셀을 저장
+    // const [cells, setcells] = useState<ICell[][]>(makeCells(8, 8, 10));
+
+    // let firstCell: ICell | undefined; //처음 눌러진 셀을 저장
 
     function _onClickBlind(id: number) {
-        setcells(
-            cells.map((y) =>
-                y.map((x) => {
-                    if (x.id === id) {
-                        return { ...x, visible: true };
-                    }
-                    return x;
-                })
-            )
-        );
+        dispatch(handleClickUpdateCell(id));
+        // setcells(
+        //     cells.map((y) =>
+        //         y.map((x) => {
+        //             if (x.id === id) {
+        //                 return { ...x, visible: true };
+        //             }
+        //             return x;
+        //         })
+        //     )
+        // );
     }
 
     function firstSet() {
-        dispatch(newCells({ y: 8, z: 8, m: 10 }));
+        dispatch(newCells({ y: 8, x: 8, m: 10 }));
         console.log(topState, 'topCells');
     }
     // 첫 클릭시 cells 생성
@@ -58,17 +60,29 @@ function App() {
     return (
         <StyledMinesweeper>
             <h1>지뢰찾기</h1>
+            {/* {JSON.stringify(topState.cells)} */}
+
             <div className="setDif">
-                <div onClick={() => setcells(makeCells(8, 8, 10))}>초급</div>
-                <div onClick={() => setcells(makeCells(16, 16, 40))}>중급</div>
-                <div onClick={() => setcells(makeCells(16, 32, 99))}>고급</div>
+                <div onClick={() => dispatch(newCells({ y: 8, x: 8, m: 10 }))}>
+                    초급
+                </div>
+                <div
+                    onClick={() => dispatch(newCells({ y: 16, x: 16, m: 40 }))}
+                >
+                    중급
+                </div>
+                <div
+                    onClick={() => dispatch(newCells({ y: 16, x: 32, m: 99 }))}
+                >
+                    고급
+                </div>
             </div>
             <div className="reset" onClick={firstSet}>
                 재시작
             </div>
 
             <StyledTable>
-                {cells.map((y) => (
+                {topState.cells.map((y: any[]) => (
                     <tr>
                         {y.map((x) =>
                             x.visible ? (
@@ -76,7 +90,7 @@ function App() {
                             ) : (
                                 <StyledBlind
                                     key={x.id}
-                                    // onClick={() => clickedSet(x)}
+                                    onClick={() => _onClickBlind(x)}
                                 >
                                     {x.value}
                                 </StyledBlind>
