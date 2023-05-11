@@ -13,6 +13,7 @@ export interface cellsState {
 const initialState: any = {
     cells: makeCells(8, 8, 10),
     gameState: 0,
+    gameInfo: { y: 8, x: 8, m: 10 },
 };
 
 interface INewCells {
@@ -26,13 +27,16 @@ export const minesweeperSlice = createSlice({
     initialState,
     reducers: {
         newCells: (state, action) => {
+            //새로운 셀 생성
             const { y, x, m }: INewCells = action.payload;
-            const stateCopy = { ...state };
+            const stateCopy = { ...state }; // 복사 1층
 
-            stateCopy.cells = makeCells(y, x, m);
+            stateCopy.cells = makeCells(y, x, m); // 새로운 셀 생성
+            stateCopy.gameInfo = { y: y, x: x, m: m }; // 새로운 게임 정보
             return stateCopy;
         },
         handleClickUpdateCell: (state, action) => {
+            // 클릭시 셀 업데이트 (숫자만)
             const { id }: { id: number } = action.payload;
 
             const stateCopy = JSON.parse(JSON.stringify(state));
@@ -68,8 +72,6 @@ export const minesweeperSlice = createSlice({
             );
             console.log(zeroCellXY);
 
-            // //find zero cell
-
             const visited = [];
 
             const { x, y } = zeroCellXY;
@@ -96,7 +98,7 @@ export const minesweeperSlice = createSlice({
                 }
             }
             console.log(visited);
-            // //update cells
+
             visited.map((v) => {
                 stateCopy.cells[v.y][v.x].visible = true;
             });

@@ -17,24 +17,32 @@ import {
 function App() {
     const dispatch = useDispatch();
     const topState = useSelector((state: RootState) => state);
-    console.log(topState, 'topCellsfirst');
-    let mineCount = 8;
+
+    let mineCount = topState.gameInfo.m; //지뢰 갯수 가져오기
 
     useEffect(() => {
-        let blindCount = 0;
-        topState.cells.map((y: any[]) =>
-            y.map((x) => (x.visible ? ++blindCount : null))
+        let blindCount = topState.gameInfo.x * topState.gameInfo.y; //전체 칸 갯수
+
+        topState.cells.map(
+            (
+                y: any[] //블라인드 된 셀 수 구하기
+            ) => y.map((x) => (x.visible ? --blindCount : null))
         );
+        console.log(mineCount, 'mineCount');
         console.log(blindCount, 'blindCount');
         if (blindCount === mineCount) {
+            //지뢰 수와 블라인드 셀 수 비교
             alert('승리하셨습니다.');
-            dispatch(newCells({ y: 8, x: 8, m: 10 }));
+            dispatch(
+                newCells({
+                    // 승리시 하던 난이도로 리셋
+                    y: topState.gameInfo.y,
+                    x: topState.gameInfo.x,
+                    m: mineCount,
+                })
+            );
         }
     }, [topState]);
-
-    // const [cells, setcells] = useState<ICell[][]>(makeCells(8, 8, 10));
-
-    // let firstCell: ICell | undefined; //처음 눌러진 셀을 저장
 
     function _onClickBlind(cell: ICell) {
         if (cell.value === 0) {
@@ -43,7 +51,13 @@ function App() {
         } else if (cell.value === 9) {
             //지뢰일때
             alert('지뢰를 밟았습니다.');
-            dispatch(newCells({ y: 8, x: 8, m: 10 }));
+            dispatch(
+                newCells({
+                    y: topState.gameInfo.y,
+                    x: topState.gameInfo.x,
+                    m: mineCount,
+                })
+            ); //지뢰 밟으면  리셋
         } else {
             //숫자일때
             dispatch(handleClickUpdateCell(cell));
@@ -51,25 +65,16 @@ function App() {
     }
 
     function firstSet() {
-        dispatch(newCells({ y: 8, x: 8, m: 10 }));
+        dispatch(
+            newCells({
+                //재시작시 하던 난이도로 리셋
+                y: topState.gameInfo.y,
+                x: topState.gameInfo.x,
+                m: mineCount,
+            })
+        );
         console.log(topState, 'topCells');
     }
-    // 첫 클릭시 cells 생성
-    // function clickedSet(cell: ICell) {
-    //     firstCell = cell;
-    //     if (first) {
-    //         alert('게임을 시작합니다.');
-    //         setFirst(false);
-    //         setFirstSetValue(cell);
-    //     }
-    // }
-
-    // 난이도 설정
-    // function settingDif(y: number, x: number, mine: number) {
-    //     setMakeCellsParams(() => [y, x, mine]);
-    // }
-
-    //visible
 
     return (
         <StyledMinesweeper>
