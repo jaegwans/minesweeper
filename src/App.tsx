@@ -7,6 +7,7 @@ import {
     newCells,
     handleClickUpdateCell,
     handelClickZeroCell,
+    handleRightClickUpdateCell,
 } from './app/minesweeper/minesweeperSlice';
 // export interface ICell {
 //     flag: boolean;
@@ -17,6 +18,7 @@ import {
 function App() {
     const dispatch = useDispatch();
     const topState = useSelector((state: RootState) => state);
+    const [firstClick, setFirstClick] = useState(true); //첫 클릭인지 확인
 
     let mineCount = topState.gameInfo.m; //지뢰 갯수 가져오기
 
@@ -75,6 +77,10 @@ function App() {
         );
         console.log(topState, 'topCells');
     }
+    function _onRightClickCell(e: any, cell: ICell) {
+        e.preventDefault();
+        dispatch(handleRightClickUpdateCell(cell));
+    }
 
     return (
         <StyledMinesweeper>
@@ -109,8 +115,11 @@ function App() {
                                 <StyledBlind
                                     key={x.id}
                                     onClick={() => _onClickBlind(x)}
+                                    onContextMenu={(e) =>
+                                        _onRightClickCell(e, x)
+                                    }
                                 >
-                                    {x.value}
+                                    {x.flag ? '🚩' : null}
                                 </StyledBlind>
                             )
                         )}

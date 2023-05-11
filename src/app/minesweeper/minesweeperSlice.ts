@@ -52,6 +52,25 @@ export const minesweeperSlice = createSlice({
 
             return stateCopy;
         },
+        handleRightClickUpdateCell: (state, action) => {
+            // 오른쪽 클릭시 셀 업데이트 (깃발)
+            const { id }: { id: number } = action.payload;
+            const stateCopy = JSON.parse(JSON.stringify(state)); //깊은 복사 2층
+            let zeroCellXY: any = { x: 0, y: 0 }; // 클릭한 셀의 좌표 를 담을 변수
+
+            // xy 좌표 추출
+            stateCopy.cells.map((y: any[]) =>
+                y.map((x) => {
+                    if (x.id === id) {
+                        zeroCellXY.y = stateCopy.cells.indexOf(y);
+                        zeroCellXY.x = y.indexOf(x);
+                    }
+                })
+            );
+            stateCopy.cells[zeroCellXY.y][zeroCellXY.x].flag =
+                !stateCopy.cells[zeroCellXY.y][zeroCellXY.x].flag; // 클릭한 셀의 깃발 상태 변경
+            return stateCopy;
+        },
         handelClickZeroCell: (state, action) => {
             // 클릭한 셀이 0일 경우 셀 포함 주변 셀 업데이트
             const cell = action.payload; // 클릭한 셀
@@ -118,7 +137,11 @@ export const minesweeperSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { newCells, handleClickUpdateCell, handelClickZeroCell } =
-    minesweeperSlice.actions;
+export const {
+    newCells,
+    handleClickUpdateCell,
+    handelClickZeroCell,
+    handleRightClickUpdateCell,
+} = minesweeperSlice.actions;
 
 export default minesweeperSlice.reducer;
