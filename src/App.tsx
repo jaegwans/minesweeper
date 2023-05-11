@@ -22,8 +22,15 @@ function App() {
 
     // let firstCell: ICell | undefined; //처음 눌러진 셀을 저장
 
-    function _onClickBlind(id: number) {
-        dispatch(handleClickUpdateCell(id));
+    function _onClickBlind(cell: ICell) {
+        if (cell.value === 0) {
+        } else if (cell.value === 9) {
+            alert('지뢰를 밟았습니다.');
+            dispatch(newCells({ y: 8, x: 8, m: 10 }));
+        } else {
+            //숫자일때
+            dispatch(handleClickUpdateCell(cell));
+        }
         // setcells(
         //     cells.map((y) =>
         //         y.map((x) => {
@@ -60,7 +67,6 @@ function App() {
     return (
         <StyledMinesweeper>
             <h1>지뢰찾기</h1>
-            {/* {JSON.stringify(topState.cells)} */}
 
             <div className="setDif">
                 <div onClick={() => dispatch(newCells({ y: 8, x: 8, m: 10 }))}>

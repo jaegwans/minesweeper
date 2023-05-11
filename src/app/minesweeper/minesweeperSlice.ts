@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { makeCells, makeEmptyCells } from '../lib/func/funcs';
-import { stat } from 'fs';
 
 export interface cellsState {
     flag: boolean;
@@ -37,7 +36,7 @@ export const minesweeperSlice = createSlice({
 
             const stateCopy = JSON.parse(JSON.stringify(state));
             // const stateCopy = { state.map((y) =>[ y.map((x) => x)) };
-            //얕은 복사 2번 하기
+            //깊은 복사 2층
             stateCopy.cells.map((y: any[]) =>
                 y.map((x) => {
                     if (x.id === id) {
