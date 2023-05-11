@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { makeCells, makeEmptyCells, ICell } from './app/lib/func/funcs';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from './app/store';
+import { newCells } from './app/minesweeper/minesweeperSlice';
 // export interface ICell {
 //     flag: boolean;
 //     visible: boolean;
@@ -8,52 +11,16 @@ import styled from 'styled-components';
 //     id: number;
 // }
 function App() {
+    const dispatch = useDispatch();
+    const topState = useSelector((state: RootState) => state);
+    console.log(topState, 'topCellsfirst');
     const [first, setFirst] = useState(true);
-    const [cells, setcells] = useState<ICell[][]>(makeEmptyCells(8, 8));
+    const [cells, setcells] = useState<ICell[][]>(makeCells(8, 8, 10));
     const [makeCellsParams, setMakeCellsParams] = useState([8, 8, 10]);
-    useEffect(() => {
-        firstSet();
-    }, [makeCellsParams]);
+    const [firstSetValue, setFirstSetValue] = useState<ICell>();
 
     let firstCell: ICell | undefined; //처음 눌러진 셀을 저장
 
-    useLayoutEffect(() => {
-        if (!first) {
-            //첫 클릭 이후 샐 생성
-            setcells(() =>
-                makeCells(
-                    makeCellsParams[0],
-                    makeCellsParams[1],
-                    makeCellsParams[2]
-                )
-            );
-            if (firstCell?.value === 9) {
-                // 첫 클릭이 지뢰일 경우
-                setFirst(true); // 첫 클릭으로 돌아감 (useEffect 재호출)
-            }
-        }
-    }, [first]);
-
-    function firstSet() {
-        setcells(() => makeEmptyCells(makeCellsParams[0], makeCellsParams[1]));
-    }
-    // 첫 클릭시 cells 생성
-    function clickedSet(cell: ICell) {
-        if (first) {
-            alert('게임을 시작합니다.');
-            setFirst(false);
-            firstCell = cell;
-        }
-
-        _onClickBlind(cell.id);
-    }
-
-    // 난이도 설정
-    function settingDif(y: number, x: number, mine: number) {
-        setMakeCellsParams(() => [y, x, mine]);
-    }
-
-    //visible
     function _onClickBlind(id: number) {
         setcells(
             cells.map((y) =>
@@ -67,13 +34,34 @@ function App() {
         );
     }
 
+    function firstSet() {
+        dispatch(newCells({ y: 8, z: 8, m: 10 }));
+        console.log(topState, 'topCells');
+    }
+    // 첫 클릭시 cells 생성
+    // function clickedSet(cell: ICell) {
+    //     firstCell = cell;
+    //     if (first) {
+    //         alert('게임을 시작합니다.');
+    //         setFirst(false);
+    //         setFirstSetValue(cell);
+    //     }
+    // }
+
+    // 난이도 설정
+    // function settingDif(y: number, x: number, mine: number) {
+    //     setMakeCellsParams(() => [y, x, mine]);
+    // }
+
+    //visible
+
     return (
         <StyledMinesweeper>
             <h1>지뢰찾기</h1>
             <div className="setDif">
-                <div onClick={() => settingDif(8, 8, 10)}>초급</div>
-                <div onClick={() => settingDif(16, 16, 40)}>중급</div>
-                <div onClick={() => settingDif(16, 32, 99)}>고급</div>
+                <div onClick={() => setcells(makeCells(8, 8, 10))}>초급</div>
+                <div onClick={() => setcells(makeCells(16, 16, 40))}>중급</div>
+                <div onClick={() => setcells(makeCells(16, 32, 99))}>고급</div>
             </div>
             <div className="reset" onClick={firstSet}>
                 재시작
@@ -88,7 +76,7 @@ function App() {
                             ) : (
                                 <StyledBlind
                                     key={x.id}
-                                    onClick={() => clickedSet(x)}
+                                    // onClick={() => clickedSet(x)}
                                 >
                                     {x.value}
                                 </StyledBlind>

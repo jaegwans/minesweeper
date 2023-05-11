@@ -1,19 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
+import { makeCells } from '../lib/func/funcs';
 
-export interface CounterState {
+export interface cellsState {
+    flag: boolean;
+    visible: boolean;
     value: number;
+    id: number;
 }
-
-const initialState: CounterState = {
-    value: 0,
+//newCells,handleClickUpdateCell(클릭시),gameState
+const initialState: any = {
+    cells: makeCells(8, 8, 10),
+    gameState: 0,
 };
+
+interface INewCells {
+    x: number;
+    y: number;
+    m: number;
+}
 
 export const minesweeperSlice = createSlice({
     name: 'counter',
     initialState,
     reducers: {
-        increment: (state) => {},
+        newCells: (state, action) => {
+            const { x, y, m }: INewCells = action.payload;
+            const stateCopy = { ...state, cells: makeCells(x, y, m) };
+
+            return stateCopy;
+        },
         // decrement: (state) => {
         //     state.value -= 1;
         // },
@@ -24,6 +40,6 @@ export const minesweeperSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { increment } = minesweeperSlice.actions;
+export const { newCells } = minesweeperSlice.actions;
 
 export default minesweeperSlice.reducer;
