@@ -111,6 +111,11 @@ export const minesweeperSlice = createSlice({
                         ) {
                             continue;
                         }
+
+                        if (cells[i][j].value < 9) {
+                            visited.push({ x: j, y: i }); // 방문한 셀에 넣음
+                        }
+
                         if (cells[i][j].value === 0) {
                             // 빈칸이면
 
