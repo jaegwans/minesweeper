@@ -9,6 +9,7 @@ import {
     handelClickZeroCell,
     handleRightClickUpdateCell,
 } from './app/minesweeper/minesweeperSlice';
+import './App.scss';
 // export interface ICell {
 //     flag: boolean;
 //     visible: boolean;
@@ -83,7 +84,7 @@ function App() {
     }
 
     return (
-        <StyledMinesweeper>
+        <div className="minesweeper">
             <h1>지뢰찾기</h1>
 
             <div className="setDif">
@@ -105,14 +106,17 @@ function App() {
                 재시작
             </div>
 
-            <StyledTable>
+            <table className="mine-table">
                 {topState.cells.map((y: any[]) => (
                     <tr>
                         {y.map((x) =>
                             x.visible ? (
-                                <StyledCell key={x.id}>{x.value}</StyledCell>
+                                <td className="cell" key={x.id}>
+                                    {x.value}
+                                </td>
                             ) : (
-                                <StyledBlind
+                                <td
+                                    className="blind"
                                     key={x.id}
                                     onClick={() => _onClickBlind(x)}
                                     onContextMenu={(e) =>
@@ -120,67 +124,14 @@ function App() {
                                     }
                                 >
                                     {x.flag ? '🚩' : null}
-                                </StyledBlind>
+                                </td>
                             )
                         )}
                     </tr>
                 ))}
-            </StyledTable>
-        </StyledMinesweeper>
+            </table>
+        </div>
     );
 }
 
 export default App;
-
-const StyledCell = styled.td`
-    cursor: pointer;
-    transition: 0.3s;
-    &:hover {
-        transform: scale(1.2);
-    }
-`;
-
-const StyledBlind = styled.td`
-    cursor: pointer;
-    transition: 0.3s;
-    &:hover {
-        transform: scale(1.2);
-        background-color: ${({ theme }) => theme.color.deepgray};
-    }
-    border: 1px solid ${({ theme }) => theme.color.black};
-    background-color: ${({ theme }) => theme.color.gray};
-`;
-
-const StyledMinesweeper = styled.div`
-    gap: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100%;
-    flex-direction: column;
-    .reset {
-        cursor: pointer;
-    }
-    .setDif {
-        div {
-            cursor: pointer;
-        }
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
-    }
-`;
-
-const StyledTable = styled.table`
-    border-collapse: collapse;
-    border-spacing: 0;
-    border: 1px solid ${({ theme }) => theme.color.black};
-    margin: 0 auto;
-    td {
-        width: 20px;
-        height: 20px;
-        text-align: center;
-        vertical-align: middle;
-    }
-`;

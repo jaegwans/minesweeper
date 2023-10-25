@@ -1,0 +1,65 @@
+$p-gap: 10px;
+$border-color: #000;
+$blind-color: #a1a1a1;
+$hover-blind-color: #d9d9d9;
+@mixin flex($direction: row, $justify: center, $align: center) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: $justify;
+    align-items: $align;
+}
+
+@mixin bigger($size: 1.2) {
+    transform: scale($size);
+}
+
+.cell {
+    cursor: pointer;
+    transition: 0.3s;
+    &:hover {
+        @include bigger;
+    }
+}
+
+.blind {
+    cursor: pointer;
+    transition: 0.3s;
+    &:hover {
+        @include bigger;
+        background-color: $hover-blind-color;
+    }
+    border: 1px solid $border-color;
+    background-color: $blind-color;
+}
+
+.minesweeper {
+    @include flex(column, center, center);
+    gap: $p-gap;
+    height: 100vh;
+    width: 100%;
+
+    .reset {
+        cursor: pointer;
+    }
+    .setDif {
+        div {
+            cursor: pointer;
+        }
+        display: flex;
+        flex-direction: row;
+        gap: $p-gap;
+    }
+}
+
+.mine-table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid $border-color;
+    margin: 0 auto;
+    td {
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        vertical-align: middle;
+    }
+}

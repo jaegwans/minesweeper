@@ -44,6 +44,7 @@
     },
     "devDependencies": {
         "@types/styled-components": "^5.1.26",
+        "sass": "^1.69.4",
         "styled-components": "^5.3.10"
     }
 }
